@@ -1,2 +1,1 @@
-# open-deep-research
-Open Deep Research
+# Open Deep Research

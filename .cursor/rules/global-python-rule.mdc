@@ -1,0 +1,114 @@
+---
+description: globally applied python coding rule
+globs: *
+alwaysApply: true
+---
+# Python Implementation Guideline
+
+Before implementing any code, you must first read the [SPEC.md](mdc:SPEC.md) file carefully.
+
+## Core Technologies & Expertise
+
+- Use `uv` to manage dependencies. Do not specify the build system; use the default.
+- Use the latest version of each library without specifying a version, unless the user requests a specific one.
+- Built on Python 3.13 and the `Chainlit` framework.
+- For LLM, use Claude 3.7 Sonnet Model(`us.anthropic.claude-3-7-sonnet-20250219-v1:0`) via Amazon Bedrock with LangChain AWS (`langchain-aws`).
+
+## Code Style & Architecture
+
+### Core Principles
+
+- Write clean code with clear intent while following PEP8 style guidelines
+- Minimize code duplication through DRY principles and maintain modular/separated structure
+- Utilize type hints extensively to enhance code stability and readability
+- Aim for complete implementation without unfinished code or temporary TODOs
+
+### Architecture Design
+
+- Organize code structure by roles: services, handlers, utilities, constants, etc.
+- Manage user interactions through Chainlit's async message processing (Async/Await)
+- Securely handle sensitive information (e.g., AWS) via environment variables (`.env`) loaded with dotenv module
+- Ensure stable operation through Python's logging module and appropriate exception handling (e.g., `ClientError`)
+
+## User Interface & Message Flow
+
+- Process user input and feedback using Chainlit Components such as, Message, File.
+
+## LLM & Web Search Integration
+
+- When writing LLM related code, you must read the @langchain.mdc carefully.
+- Include appropriate exception handling and user guidance messages for each feature call
+
+## Testing & Maintenance
+
+- Write comprehensive test cases for all features (document creation, file saving, web search, etc.)
+- Maintain code quality and consistency through code reviews and regular refactoring
+- Update both @SPEC.md and cursorrules when adding new features to ensure documentation stays current
+
+
+## Additional Considerations
+
+- Process sensitive information server-side and expose minimal information to clients
+- Follow latest security best practices for security-related features with regular security audits
+- Strengthen team collaboration and maintenance culture through commit messages, code reviews, and documentation
+
+## Error Handling
+
+- Implement comprehensive error handling for all operations
+- Log errors appropriately using Python's logging module
+- Provide user-friendly error messages through Chainlit interface
+- Handle specific exceptions:
+  ```python
+  try:
+      # Operation code
+  except ClientError as e:
+      logging.error(f"AWS operation error: {str(e)}")
+      await cl.Message(content="Operation failed. Please try again.").send()
+  except Exception as e:
+      logging.error(f"Unexpected error: {str(e)}")
+      await cl.Message(content="An unexpected error occurred.").send()
+  ```
+
+## File Structure
+
+```
+src/
+  ├── services/       # Core business logic
+  ├── handlers/       # Request handlers
+  ├── utils/          # Utility functions
+  ├── prompts/        # LLM prompt templates
+  ├── constant.py     # Global constants
+  └── types.py        # Type definitions
+env/                  # Env files for stages
+.env                  # Current Environment variables
+app.py                # Main python app file
+```
+
+## Naming Conventions
+
+- Classes: PascalCase (e.g., `FileLoadHandler`)
+- Functions/Methods: snake_case (e.g., `handle_save_document`)
+- Variables: snake_case (e.g., `user_message`)
+- Constants: UPPER_SNAKE_CASE (e.g., `MAX_RETRIES`)
+- Files: snake_case (e.g., `file_handler.py`)
+
+## Documentation Standards
+
+Include docstrings for all classes and functions using Google style:
+
+```python
+def function_name(param1: str, param2: int) -> bool:
+    """
+    Brief description of function.
+
+    Args:
+        param1 (str): Description of param1
+        param2 (int): Description of param2
+
+    Returns:
+        bool: Description of return value
+
+    Raises:
+        ValueError: Description of when this error occurs
+    """
+```

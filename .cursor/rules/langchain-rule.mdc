@@ -1,0 +1,20 @@
+---
+description: langchain and amazon bedrock related llm coding rule
+globs: **/*.py
+alwaysApply: true
+---
+# LLM-based Features Implementation Guideline
+
+## Platform Requirements
+
+- Use Langchain (`langchain`) and Langchain AWS (`langchain-aws`) libraries
+- Use Amazon Bedrock's Converse API via Langchain, `ChatBedrockConverse` class
+- Use Claude 3.7 Sonnet model: `us.anthropic.claude-3-7-sonnet-20250219-v1:0`
+
+## AWS Profile
+
+- Take `AWS_PROFILE` variable from environment value and pass it to constructor property of `ChatBedrockConverse` class
+
+## Prompts
+
+- Always separate prompts into dedicated files, under `src/prompts/`
